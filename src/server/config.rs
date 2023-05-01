@@ -122,12 +122,13 @@ impl TlsConfigBuilder {
         let key = read_key(&mut key_rd)?;
 
         let client_auth = match self.client_auth {
-            TlsClientAuth::Off => NoClientAuth::new(),
+            TlsClientAuth::Off => NoClientAuth::boxed(),
             TlsClientAuth::Optional(trust_anchor) => {
                 AllowAnyAnonymousOrAuthenticatedClient::new(read_trust_anchor(trust_anchor)?)
+                    .boxed()
             }
             TlsClientAuth::Required(trust_anchor) => {
-                AllowAnyAuthenticatedClient::new(read_trust_anchor(trust_anchor)?)
+                AllowAnyAuthenticatedClient::new(read_trust_anchor(trust_anchor)?).boxed()
             }
         };
 

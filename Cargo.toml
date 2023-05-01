@@ -1,10 +1,10 @@
 [package]
 name = "hyper-rustls"
-version = "0.1.0"
+version = "0.2.0-beta.1"
 authors = ["Markus Wiegand <mail@morphy2k.dev>"]
 edition = "2021"
 license = "MIT"
-rust-version = "1.68"
+rust-version = "1.69"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -20,7 +20,7 @@ early-data = ["tokio-rustls/early-data"]
 [dependencies]
 hyper = { version = "0.14", default-features = false, features = ["runtime"] }
 tokio = { version = "1", default-features = false }
-tokio-rustls = { version = "0.23", default-features = false }
+tokio-rustls = { version = "0.24", default-features = false }
 rustls-pemfile = "1"
 thiserror = "1"
 

@@ -27,8 +27,8 @@ fn target_dir() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
 }
 
-const fn ip_addr() -> IpAddr {
-    IpAddr::V4(Ipv4Addr::LOCALHOST)
+const fn socket_addr() -> SocketAddr {
+    SocketAddr::new(IpAddr::V4(Ipv4Addr::LOCALHOST), 8080)
 }
 
 async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
@@ -37,10 +37,10 @@ async fn handle(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
 
 #[tokio::test]
 async fn tls_server() {
-    let addr = SocketAddr::from((ip_addr(), 8080));
+    const ADDR: SocketAddr = socket_addr();
 
     tokio::spawn(async move {
-        let incoming = AddrIncoming::bind(&addr).unwrap();
+        let incoming = AddrIncoming::bind(&ADDR).unwrap();
 
         let make_service =
             make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(handle)) });
@@ -68,7 +68,7 @@ async fn tls_server() {
             "{}",
             target_dir().join("tests/ca.pem").to_string_lossy()
         ))
-        .arg(format!("https://{addr}"))
+        .arg(format!("https://{ADDR}"))
         .output()
         .await
         .expect("cannot run curl");
